@@ -1,65 +1,72 @@
-#include <Servo.h>
 
-// Create servo object
+#include <Servo.h>  
+
 Servo sg90;
 
-// LDR Pins
-const int LDR1 = A0;
-const int LDR2 = A1;
+// Define the analog pins connected to the two LDR sensors
+const int LDR1 = A0;  // Left-side LDR sensor
+const int LDR2 = A1;  // Right-side LDR sensor
 
-// Servo Pin
+// Define the digital pin connected to the servo motor
 const int servoPin = 4;
 
-// Variables
-int servoPosition = 90;   // Initial servo position
-const int error = 5;      // Minimum difference to move servo
+// Initialize the servo position and sensitivity
+int servoPosition = 90;  // Set the initial servo position to 90 degrees
+const int error = 5;     // Minimum light difference required to move the servo
 
 void setup()
 {
+  // Start serial communication to display sensor values
   Serial.begin(9600);
 
+  // Configure both LDR pins as input pins
   pinMode(LDR1, INPUT);
   pinMode(LDR2, INPUT);
 
+  // Connect the servo motor to pin 4
   sg90.attach(servoPin);
+
+  // Move the servo to its initial position
   sg90.write(servoPosition);
 
+  // Wait for one second for the servo to reach its position
   delay(1000);
 }
 
 void loop()
 {
-  // Read LDR values
+  // Read the light intensity values from both LDR sensors
   int sensorLeft = analogRead(LDR1);
   int sensorRight = analogRead(LDR2);
 
-  // Print values to Serial Monitor
+  // Display both LDR readings in the Serial Monitor
   Serial.print("LDR1: ");
   Serial.print(sensorLeft);
   Serial.print("    LDR2: ");
   Serial.println(sensorRight);
 
-  // Calculate difference
+  // Calculate the absolute difference between the two sensor readings
   int diff = abs(sensorLeft - sensorRight);
 
-  // Move servo only if difference is greater than error
+  // Move the servo only when the difference exceeds the threshold
   if (diff > error)
   {
-    // Left LDR receives more light
+    // If the left LDR receives a higher reading, rotate the servo left
     if (sensorLeft > sensorRight && servoPosition > 0)
     {
-      servoPosition--;
+      servoPosition--;  // Decrease the servo angle by one degree
     }
 
-    // Right LDR receives more light
+    // If the right LDR receives a higher reading, rotate the servo right
     else if (sensorRight > sensorLeft && servoPosition < 180)
     {
-      servoPosition++;
+      servoPosition++;  // Increase the servo angle by one degree
     }
 
-    // Move servo
+    // Move the servo to the updated position
     sg90.write(servoPosition);
   }
 
+  // Wait 20 milliseconds before taking the next readings
   delay(20);
 }

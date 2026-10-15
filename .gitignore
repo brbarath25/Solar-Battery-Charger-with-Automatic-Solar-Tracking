@@ -1,19 +1,24 @@
-# Compiled files
+
+# Ignore compiled object files
 *.o
 *.obj
+
+# Ignore executable files
 *.exe
 
-# Temporary files
+# Ignore temporary files
 *.tmp
 *.log
 
-# Archive files
+# Ignore compressed archive files
 *.zip
 *.rar
 
-# Operating system files
+# Ignore macOS system files
 .DS_Store
+
+# Ignore Windows thumbnail cache files
 Thumbs.db
 
-# Arduino temporary files
-*.ino~
+# Ignore Arduino sketch files
+*.ino
